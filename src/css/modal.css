@@ -1,0 +1,120 @@
+@keyframes scale {
+  from {
+    transform: scale(0);
+  }
+  80% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes shrink {
+  from {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+
+.modal-wrapper {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  text-align: center;
+}
+.modal-wrapper.show {
+  display: block;
+}
+.modal-wrapper.hide {
+  display: none;
+}
+.modal-wrapper:after {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+}
+.modal-wrapper .modal-mask {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: #00000073;
+}
+.modal-wrapper .modal-box {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  width: 520px;
+  text-align: left;
+  background: #fff;
+}
+.modal-wrapper.show .modal-box {
+  animation: scale 0.5s;
+}
+.modal-wrapper.hiding .modal-box {
+  animation: shrink 0.5s;
+}
+.modal-wrapper .modal-box .modal-header {
+  display: flex;
+  border-bottom: 1px solid #f0f0f0;
+  user-select: none;
+}
+.modal-wrapper .modal-box .modal-header .modal-title {
+  flex: 1;
+  padding: 16px 24px;
+  font-weight: 500;
+  font-size: 16px;
+}
+.modal-wrapper .modal-box .modal-header .modal-close {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+}
+.modal-wrapper .modal-box .modal-header .modal-close:before,
+.modal-wrapper .modal-box .modal-header .modal-close:after {
+  content: '';
+  position: absolute;
+  background: #00000073;
+}
+.modal-wrapper .modal-box .modal-header .modal-close:hover:before,
+.modal-wrapper .modal-box .modal-header .modal-close:hover:after {
+  background: #1890ff;
+}
+.modal-wrapper .modal-box .modal-header .modal-close:before {
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 1px;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.modal-wrapper .modal-box .modal-header .modal-close:after {
+  left: 50%;
+  top: 50%;
+  width: 1px;
+  height: 16px;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.modal-wrapper .modal-box .modal-body {
+  padding: 24px;
+}
+.modal-wrapper .modal-box .modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid #f0f0f0;
+  padding: 10px 16px;
+}
+.modal-wrapper .modal-box .modal-footer .submit {
+  margin-left: 8px;
+}

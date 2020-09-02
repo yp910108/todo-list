@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Todo List</title>
+    <link rel="stylesheet" type="text/css" href="./src/css/modal.css" />
+    <link rel="stylesheet" type="text/css" href="./src/css/index.css" />
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div class="wrapper">
+      <div class="container">
+        <div class="row search-wrapper">
+          <div class="col-12 search">
+            <label>名称：</label>
+            <input placeholder="请输入" />
+          </div>
+          <div class="col-12 search">
+            <label>描述：</label>
+            <input placeholder="请输入" />
+          </div>
+          <div class="col-12 offset-12 btn-group">
+            <button>重 置</button>
+            <button class="btn-primary">查 询</button>
+            <button class="btn-link btn-expand">展开<i></i></button>
+          </div>
+        </div>
+        <div class="table-content">
+          <div class="table-toolbar">
+            <div class="title">查询表格</div>
+            <div class="option">
+              <button class="btn-primary btn-add"><i></i>新 建</button>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th><span class="checkbox"></span></th>
+                <th>名称</th>
+                <th>描述</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="./src/js/modal.js"></script>
+    <script src="./src/js/index.js"></script>
+  </body>
+</html>
