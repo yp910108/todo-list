@@ -1,4 +1,4 @@
-var Modal = (function () {
+;var Modal = (function () {
   function generModal(title, children) {
     var elWrapper = document.createElement('div'),
       elBody;
@@ -16,7 +16,7 @@ var Modal = (function () {
       '<button class="cancel">取消</button>',
       '<button class="btn-primary submit">提交</button>',
       '</div>',
-      '</div>',
+      '</div>'
     ].join('');
     elBody = elWrapper.querySelector('.modal-body');
     if (children) {

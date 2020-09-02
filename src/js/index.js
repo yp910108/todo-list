@@ -1,10 +1,10 @@
-(function () {
+;(function () {
   var LIST = [
     { id: 1, name: '测试名称1', desc: '测试描述1' },
     { id: 2, name: '测试名称2', desc: '测试描述2' },
     { id: 3, name: '测试名称3', desc: '测试描述3' },
     { id: 4, name: '测试名称4', desc: '测试描述4' },
-    { id: 5, name: '测试名称5', desc: '测试描述5' },
+    { id: 5, name: '测试名称5', desc: '测试描述5' }
   ];
   var MODAL_TEMPLATE = [
     '<div class="form-item is-required">',
@@ -20,7 +20,7 @@
     '<input name="desc" placeholder="请输入描述" />',
     '<span class="form-item-explain">请输入描述</span>',
     '</div>',
-    '</div>',
+    '</div>'
   ].join('');
   function generateTr(list) {
     var strArr = list.map(function (item) {
@@ -39,7 +39,7 @@
         '<span class="divider"></span>',
         '<button class="btn-link btn-detail">查看详情</button>',
         '</td>',
-        '</tr>',
+        '</tr>'
       ].join('');
     });
     return strArr.join('');
