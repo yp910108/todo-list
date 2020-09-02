@@ -31,13 +31,14 @@ var Modal = (function () {
     return elWrapper;
   }
   function Modal(options) {
-    options = options || {};
+    val = options = options || {};
     this.el = generModal(options.title || '标题', options.children);
     options.open && (this.open = options.open);
     options.closed && (this.closed = options.closed);
     options.submit && (this.submit = options.submit);
     this.elMask = this.el.querySelector('.modal-mask');
     this.elBox = this.el.querySelector('.modal-box');
+    this.elTitle = this.el.querySelector('.modal-title');
     this.elClose = this.elBox.querySelector('.modal-close');
     this.elBtnCancel = this.elBox.querySelector('.cancel');
     this.elBtnSubmit = this.elBox.querySelector('.submit');
@@ -80,6 +81,9 @@ var Modal = (function () {
       if (result) {
         this.hide();
       }
+    },
+    setTitie(title) {
+      this.elTitle.innerText = title;
     },
   };
   return Modal;

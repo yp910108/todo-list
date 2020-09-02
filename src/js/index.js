@@ -6,7 +6,7 @@
     { id: 4, name: '测试名称4', desc: '测试描述4' },
     { id: 5, name: '测试名称5', desc: '测试描述5' },
   ];
-  var MODALCONTENT = [
+  var MODAL_TEMPLATE = [
     '<div class="form-item is-required">',
     '<label>名称：</label>',
     '<div class="form-item-control">',
@@ -35,6 +35,8 @@
         '<td>',
         '<button class="btn-link btn-edit">修改</button>',
         '<span class="divider"></span>',
+        '<button class="btn-link btn-del">删除</button>',
+        '<span class="divider"></span>',
         '<button class="btn-link btn-detail">查看详情</button>',
         '</td>',
         '</tr>',
@@ -45,20 +47,40 @@
   function TodoList(list) {
     this.list = list;
     this.currItem = undefined;
+    this.currList = [];
 
     this.elWrapper = document.querySelector('.wrapper');
 
+    this.elSearchWrapper = this.elWrapper.querySelector('.search-wrapper');
+    this.elSearchName = this.elSearchWrapper.querySelector('.name');
+    this.elSearchInputName = this.elSearchName.querySelector('input');
+    this.elSearchDesc = this.elSearchWrapper.querySelector('.desc');
+    this.elSearchInputDesc = this.elSearchDesc.querySelector('input');
+    this.elBtnGroup = this.elSearchWrapper.querySelector('.btn-group');
+    this.elBtnReset = this.elBtnGroup.querySelector('.btn-reset');
+    this.elBtnQuery = this.elBtnGroup.querySelector('.btn-query');
+    this.elBtnExpand = this.elBtnGroup.querySelector('.btn-expand');
+    this.elBtnExpand = this.elBtnGroup.querySelector('.btn-expand');
+
     this.elContent = this.elWrapper.querySelector('.table-content');
-    this.elBtnAdd = this.elContent.querySelector('.btn-add');
+
+    this.elToolbar = this.elContent.querySelector('.table-toolbar');
+    this.elBtnAdd = this.elToolbar.querySelector('.btn-add');
+
+    this.elAlert = this.elContent.querySelector('.table-alert');
+    this.elAlertNum = this.elAlert.querySelector('.num');
+    this.elBtnBatchDel = this.elAlert.querySelector('.btn-batch-del');
+    this.elBtnClear = this.elAlert.querySelector('.btn-clear');
 
     this.elTable = this.elContent.querySelector('table');
+    this.elThead = this.elTable.querySelector('thead');
+    this.elCheckboxAll = this.elThead.querySelector('tr').querySelector('.checkbox');
     this.elTbody = this.elTable.querySelector('tbody');
     this.elTbody.innerHTML = generateTr(list);
 
     // form
     this.modal = new Modal({
-      title: '新建',
-      children: MODALCONTENT,
+      children: MODAL_TEMPLATE,
     });
 
     this.elForms = this.modal.el.querySelectorAll('.form-item');
@@ -77,6 +99,10 @@
     constructor: TodoList,
     refresh: function (list) {
       list = list || this.list;
+      this.currList = [];
+      this.elAlert.classList.add('hide');
+      this.elCheckboxAll.classList.remove('checked');
+      this.elCheckboxAll.classList.remove('indeterminate');
       this.elTbody.innerHTML = generateTr(list);
     },
     getFormNames: function () {
@@ -127,7 +153,7 @@
     },
     setFileldsValue: function (obj) {
       var _this = this;
-      Object.keys(obj).forEach((key) => {
+      Object.keys(obj || {}).forEach((key) => {
         _this.setFileldValue(key, obj[key]);
       });
     },
@@ -190,23 +216,122 @@
         _this.resetField(name);
       });
     },
+    addCheckbox: function () {
+      this.elTbody.querySelectorAll('tr').forEach((el) => {
+        var elCheckbox = el.querySelector('.checkbox');
+        if (!elCheckbox.classList.contains('checked')) {
+          elCheckbox.classList.add('checked');
+        }
+      });
+      this.currList = this.list.map(function (item) {
+        return utils.copy(item);
+      });
+    },
+    removeCheckbox: function () {
+      this.elTbody.querySelectorAll('tr').forEach((el) => {
+        var elCheckbox = el.querySelector('.checkbox');
+        if (elCheckbox.classList.contains('checked')) {
+          elCheckbox.classList.remove('checked');
+        }
+      });
+      this.currList = [];
+    },
     addTableEvent() {
       var _this = this;
       this.elTbody.querySelectorAll('tr').forEach((el, index) => {
+        var currItem = _this.list[index];
+        el.querySelector('.checkbox').addEventListener('click', function (e) {
+          if (e.target.classList.contains('checked')) {
+            e.target.classList.remove('checked');
+            _this.currList = _this.currList.filter(function (item) {
+              return currItem.id !== item.id;
+            });
+          } else {
+            e.target.classList.add('checked');
+            _this.currList.push(utils.copy(currItem));
+          }
+          if (!_this.currList.length) {
+            _this.elAlert.classList.add('hide');
+            _this.elCheckboxAll.classList.remove('indeterminate');
+          } else {
+            _this.elAlert.classList.remove('hide');
+            _this.elAlertNum.innerText = _this.currList.length;
+            if (_this.currList.length === _this.list.length) {
+              _this.elCheckboxAll.classList.remove('indeterminate');
+              _this.elCheckboxAll.classList.add('checked');
+            } else {
+              _this.elCheckboxAll.classList.remove('checked');
+              _this.elCheckboxAll.classList.add('indeterminate');
+            }
+          }
+        });
         el.querySelector('.btn-edit').addEventListener('click', function () {
-          var currItem = _this.list[index];
-          _this.currItem = Object.keys(currItem).reduce(function (prev, curr) {
-            prev[curr] = currItem[curr];
-            return prev;
-          }, {});
+          _this.currItem = utils.copy(currItem);
+          _this.modal.setTitie('修改');
+          _this.modal.show();
+        });
+        el.querySelector('.btn-del').addEventListener('click', function () {
+          _this.list = _this.list.filter(function (item) {
+            return currItem.id !== item.id;
+          });
+          _this.refresh();
+          _this.addTableEvent();
+        });
+        el.querySelector('.btn-detail').addEventListener('click', function () {
+          // 详情未实现
+          _this.currItem = utils.copy(currItem);
+          _this.modal.setTitie('详情');
           _this.modal.show();
         });
       });
     },
     addEvent: function () {
       var _this = this;
+      this.elBtnReset.addEventListener('click', function () {
+        _this.elSearchInputName.value = '';
+        _this.elSearchInputDesc.value = '';
+        _this.list = LIST;
+        _this.refresh();
+        _this.addTableEvent();
+      });
+      this.elBtnQuery.addEventListener('click', function () {
+        var searchValueName = _this.elSearchInputName.value,
+          searchValueDesc = _this.elSearchInputDesc.value;
+        _this.list = _this.list.filter((item) => {
+          return item.name.indexOf(searchValueName) !== -1 && item.desc.indexOf(searchValueDesc) !== -1;
+        });
+        _this.refresh();
+        _this.addTableEvent();
+      });
+      this.elBtnExpand.addEventListener('click', function (e) {
+        var el = e.target;
+        if (el.classList.contains('rotate')) {
+          el.classList.remove('rotate');
+          _this.elBtnGroup.classList.remove('offset-12');
+          _this.elSearchDesc.classList.add('hide');
+        } else {
+          el.classList.add('rotate');
+          _this.elBtnGroup.classList.add('offset-12');
+          _this.elSearchDesc.classList.remove('hide');
+        }
+      });
+      this.elBtnBatchDel.addEventListener('click', function () {
+        var ids = _this.currList.map(function (item) {
+          return item.id;
+        });
+        _this.list = _this.list.filter(function (item) {
+          return ids.indexOf(item.id) === -1;
+        });
+        _this.refresh();
+        _this.addTableEvent();
+      });
+      this.elBtnClear.addEventListener('click', function () {
+        _this.refresh();
+        _this.addTableEvent();
+      });
       this.elBtnAdd.addEventListener('click', function () {
         _this.currItem = undefined;
+        _this.modal.setTitie('新建');
         _this.modal.show();
       });
       this.elForms.forEach((el) => {
@@ -214,6 +339,19 @@
         elInput.addEventListener('input', function () {
           _this.validateField(elInput.name);
         });
+      });
+      this.elCheckboxAll.addEventListener('click', function (e) {
+        if (e.target.classList.contains('checked')) {
+          _this.elAlert.classList.add('hide');
+          e.target.classList.remove('checked');
+          _this.removeCheckbox();
+        } else {
+          _this.elAlert.classList.remove('hide');
+          _this.elAlertNum.innerText = _this.list.length;
+          _this.elCheckboxAll.classList.remove('indeterminate');
+          e.target.classList.add('checked');
+          _this.addCheckbox();
+        }
       });
       this.addTableEvent();
       this.modal.open = function () {

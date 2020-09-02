@@ -61,7 +61,7 @@ button {
   text-align: center;
   font-weight: 400;
   font-size: 14px;
-  background: #fff;
+  background: transparent;
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
   outline: none;
@@ -71,7 +71,6 @@ button {
 button:hover,
 button:focus {
   color: #40a9ff;
-  background: #fff;
   border-color: #40a9ff;
 }
 button:focus {
@@ -143,6 +142,9 @@ button.btn-link:focus {
   display: flex;
   margin-bottom: 24px;
 }
+.wrapper .container .search-wrapper .search.hide {
+  display: none;
+}
 .wrapper .container .search-wrapper .search label {
   flex: 0 0 120px;
   height: 32px;
@@ -167,6 +169,7 @@ button.btn-link:focus {
   margin: 2px;
   width: 10px;
   height: 8px;
+  transition: all 0.2s linear;
 }
 .wrapper .container .search-wrapper .btn-group .btn-expand i:before,
 .wrapper .container .search-wrapper .btn-group .btn-expand i:after {
@@ -190,9 +193,13 @@ button.btn-link:focus {
   transform-origin: 0 0;
   transform: rotate(34deg);
 }
+.wrapper .container .search-wrapper .btn-group .btn-expand.rotate i {
+  transform: rotate(180deg);
+}
 
 .wrapper .container .table-content {
   margin-top: 26px;
+  border-radius: 2px;
   padding-bottom: 26px;
   background: #fff;
 }
@@ -237,13 +244,52 @@ button.btn-link:focus {
   height: 100%;
 }
 
-.wrapper .container .table-content table {
-  width: 100%;
-  text-align: center;
+.wrapper .container .table-content .table-alert {
+  display: flex;
+  margin: 0 24px 16px 24px;
+  border-radius: 2px;
+  border: 1px solid #91d5ff;
+  padding: 12px 15px;
+  background: #e6f7ff;
 }
+.wrapper .container .table-content .table-alert.hide {
+  display: none;
+}
+.wrapper .container .table-content .table-alert .text {
+  position: relative;
+  flex: 1;
+  padding-left: 20px;
+}
+.wrapper .container .table-content .table-alert .text:before {
+  content: '!';
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 100%;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  text-align: center;
+  font-size: 12px;
+  background: #1890ff;
+  color: #fff;
+  transform: rotate(180deg);
+}
+.wrapper .container .table-content .table-alert .text .num {
+  margin: 0 5px;
+  font-weight: 600;
+  color: #1890ff;
+}
+.wrapper .container .table-content .table-alert .btn-clear {
+  margin-left: 5px;
+}
+
 .wrapper .container .table-content table {
+  table-layout: fixed;
   border-collapse: separate;
   border-spacing: 0;
+  width: 100%;
+  text-align: center;
 }
 .wrapper .container .table-content table thead tr th,
 .wrapper .container .table-content table tbody tr td {
@@ -274,6 +320,9 @@ button.btn-link:focus {
   content: '';
   position: absolute;
   top: 50%;
+  transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
+}
+.wrapper .container .table-content table tr .checkbox.checked:after {
   left: 22%;
   border: 2px solid #fff;
   border-top: 0;
@@ -281,7 +330,14 @@ button.btn-link:focus {
   width: 5.71428571px;
   height: 9.14285714px;
   transform: rotate(45deg) scale(1) translate(-50%, -50%);
-  transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
+}
+.wrapper .container .table-content table tr .checkbox.indeterminate:after {
+  left: 50%;
+  border: 0;
+  width: 8px;
+  height: 8px;
+  background-color: #1890ff;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .form-item {
